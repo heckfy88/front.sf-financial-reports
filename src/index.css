@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-image: linear-gradient(to bottom, black 0%, #242424 50%, black 100%);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -57,7 +57,8 @@ button:focus-visible {
 @media (prefers-color-scheme: light) {
   :root {
     color: #213547;
-    background-color: #ffffff;
+    background-image: linear-gradient(to top, #dfe9f3 0%, white 100%);
+    /*background-color: #ffffff;*/
   }
   a:hover {
     color: #747bff;
