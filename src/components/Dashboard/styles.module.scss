@@ -1,0 +1,55 @@
+.dashboard {
+  padding: 20px;
+
+  .dashboard-tabs {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 20px;
+
+    .tab-button {
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      border-radius: 4px;
+
+      &.active {
+        background-color: #007bff;
+        color: white;
+      }
+    }
+  }
+
+  .dashboard-content {
+    background: #333333;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  canvas {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.time-range-selector {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+
+  button {
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+
+    &.active {
+      background-color: #007bff;
+      color: white;
+      border-color: #007bff;
+    }
+  }
+}

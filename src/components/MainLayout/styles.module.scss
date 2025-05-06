@@ -1,0 +1,15 @@
+.layout {
+  width: 100vw;
+  height: 100vh;
+  padding-top: 100px;
+  flex: 1;
+  color: rgba(255, 255, 255, 0.87);
+  background-image: linear-gradient(to bottom, black 0%, #242424 50%, black 100%);
+
+  .button {
+    position: absolute;
+    top: 95px;
+    right: 15px;
+  }
+}
+

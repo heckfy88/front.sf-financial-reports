@@ -1,16 +1,14 @@
-import './App.css'
-import { Route, Routes } from "react-router-dom";
-import MainLayout from "_components/MainLayout/MainLayout.jsx";
-import AppRouter from "_/routes/AppRoutes.jsx";
+import { ApiProvider } from "_services/api-context.jsx";
+import { StoresProvider } from "_stores/stores-provider.jsx";
+import AppRoutes from "_/routes/AppRoutes.jsx";
 
 function App() {
   return (
-    <Routes>
-      <Route path="/" element={<MainLayout />}>
-        <Route index element={<AppRouter />} />
-        <Route path="*" element={<AppRouter />} />
-      </Route>
-    </Routes>
+    <ApiProvider>
+      <StoresProvider>
+        <AppRoutes />
+      </StoresProvider>
+    </ApiProvider>
   )
 }
 

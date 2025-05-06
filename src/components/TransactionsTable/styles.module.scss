@@ -1,0 +1,38 @@
+$table-border-color: #ccc;
+$table-row-hover: #4a4a4a;
+$text-muted: #666;
+
+.table-container {
+  overflow-x: auto;
+  margin-top: 32px;
+  padding-bottom: 32px;
+
+  .transactions-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: sans-serif;
+    font-size: 12px;
+
+    th, td {
+      border: 1px solid $table-border-color;
+      padding: 8px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    tbody {
+      tr {
+        &:hover {
+          background-color: $table-row-hover;
+        }
+
+        .no-data-row {
+          text-align: center;
+          font-style: italic;
+          color: $text-muted;
+          padding: 16px;
+        }
+      }
+    }
+  }
+}

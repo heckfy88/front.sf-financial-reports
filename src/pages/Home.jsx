@@ -1,6 +1,8 @@
+import Header from "_components/Header/Header.jsx";
+
 const Home = () => {
   return (
-    <div>Стартовая страница</div>
+    <Header title="Стартовая страница" big center />
   );
 };
 

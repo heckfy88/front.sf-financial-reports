@@ -1,38 +1,56 @@
-import { useState } from 'react';
-import TimelineChart from './TimelineChart';
-import TransactionTypeChart from './TransactionTypeChart';
-import IncomeVsExpenseChart from './IncomeVsExpenseChart';
-import StatusPieChart from './StatusPieChart';
-import BankStatsChart from './BankStatsChart';
-import CategoryBreakdownChart from './CategoryBreakdownChart';
+import React, { useState } from "react";
+import Dashboard1 from "./Dashboard1_TransactionsOverTime";
+import Dashboard2 from "./Dashboard2_ByTransactionType";
+import Dashboard3 from "./Dashboard3_IncomeVsExpense";
+import Dashboard4 from "./Dashboard4_StatusStats";
+import Dashboard5 from "./Dashboard5_BankStats";
+import Dashboard6 from "./Dashboard6_CategoryStats";
+import styles from "./styles.module.scss";
+import cs from "classnames";
+import { useStores } from "_stores/use-stores.js";
+import { observer } from "mobx-react-lite";
 
-const DashboardTabs = () => {
-  const [tab, setTab] = useState('timeline');
+const tabs = [
+  "📈 По времени",
+  "💳 По типу",
+  "⚖️ Поступления vs Траты",
+  "🔁 Статусы",
+  "🏦 Банки",
+  "📊 Категории"
+];
 
-  const tabComponents = {
-    timeline: <TimelineChart />,
-    type: <TransactionTypeChart />,
-    comparison: <IncomeVsExpenseChart />,
-    status: <StatusPieChart />,
-    banks: <BankStatsChart />,
-    categories: <CategoryBreakdownChart />,
-  };
+function DashboardTabsComponent () {
+  const [activeTab, setActiveTab] = useState(0);
+  const { transactionsStore } = useStores();
+  const { filteredTransactions: transactions, loading } = transactionsStore;
+
+  const dashboards = [
+    <Dashboard1 transactions={transactions} loading={loading} />,
+    <Dashboard2 transactions={transactions} loading={loading}  />,
+    <Dashboard3 transactions={transactions} loading={loading} />,
+    <Dashboard4 transactions={transactions} loading={loading} />,
+    <Dashboard5 transactions={transactions} loading={loading} />,
+    <Dashboard6 transactions={transactions} loading={loading} />,
+  ];
 
   return (
-    <div>
-      <div className="tab-buttons">
-        <button onClick={() => setTab('timeline')}>📈 Временная динамика</button>
-        <button onClick={() => setTab('type')}>💳 Тип транзакции</button>
-        <button onClick={() => setTab('comparison')}>⚖️ Поступления vs Расходы</button>
-        <button onClick={() => setTab('status')}>🔁 Статус транзакций</button>
-        <button onClick={() => setTab('banks')}>🏦 Банки</button>
-        <button onClick={() => setTab('categories')}>📊 Категории</button>
+    <div className={styles.dashboard}>
+      <div className={styles.dashboardTabs}>
+        {tabs.map((tab, index) => (
+          <button
+            key={index}
+            className={cs(styles.tabButton, index === activeTab && styles.active)}
+            onClick={() => setActiveTab(index)}
+          >
+            {tab}
+          </button>
+        ))}
       </div>
-      <div className="tab-content">
-        {tabComponents[tab]}
+      <div className={styles.dashboardContent}>
+        {dashboards[activeTab]}
       </div>
     </div>
   );
-};
+}
 
-export default DashboardTabs;
+export const DashboardTabs = observer(DashboardTabsComponent);

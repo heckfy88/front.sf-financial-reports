@@ -1,0 +1,32 @@
+.component {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 15px;
+  background: #000;
+  box-shadow: 0 2px 4px rgba(255,255,255,0.7);
+
+  .nav {
+    display: flex;
+    gap: 20px;
+
+    a {
+      text-decoration: none;
+      color: #a1a1a1;
+      padding: 8px 12px;
+      transition: color 0.3s;
+
+      &:hover {
+        color: white;
+      }
+
+      &.active {
+        color: white;
+      }
+    }
+  }
+}

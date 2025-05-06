@@ -1,11 +1,12 @@
-import DashboardTabs from '_components/Dashboard/DashboardTabs';
+import Header from "_components/Header/Header.jsx";
+import { DashboardTabs } from "_components/Dashboard/DashboardTabs.jsx";
 
 const Reports = () => {
   return (
-    <div>
-      <h2>Отчёты</h2>
+    <>
+      <Header big center title="Отчеты" />
       <DashboardTabs />
-    </div>
+    </>
   );
 };
 
