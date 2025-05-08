@@ -1,5 +1,5 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Home from '_pages/Home';
+import Home from '_pages/Home/Home.jsx';
 import Transactions from '_pages/Transitions/Transactions.jsx';
 import Reports from '_pages/Reports';
 import Login from '_pages/Login/Login.jsx';

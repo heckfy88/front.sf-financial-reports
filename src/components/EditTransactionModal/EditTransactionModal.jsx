@@ -16,7 +16,7 @@ function EditTransactionModalComponent({ onClose, transaction }) {
   const personType = PERSON_TYPES;
 
   const [formData, setFormData] = useState({
-    personType: Object.keys(personType).find(key => personType[key] === transaction.receiverUserType),
+    personType: personType[transaction.receiverUserType],
     date: transaction.date.replaceAll(".", "-"),
     comment: transaction.description,
     amount: transaction.amount,
