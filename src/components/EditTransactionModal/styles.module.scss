@@ -57,6 +57,16 @@
         select {
           width: 170px;
         }
+
+        .category-wrapper {
+          display: flex;
+          flex-direction: column;
+
+          .select-row {
+            display: flex;
+            gap: 16px;
+          }
+        }
       }
 
       .modal-actions {

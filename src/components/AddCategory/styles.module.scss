@@ -1,0 +1,19 @@
+.component {
+  margin-top: 8px;
+  border: 1px solid #cccccc;
+  border-radius: 4px;
+  padding: 24px 8px 8px;
+
+  .inputs {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+  }
+
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 16px;
+  }
+}

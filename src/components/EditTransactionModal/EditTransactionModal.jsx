@@ -2,19 +2,22 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import styles from "./styles.module.scss";
 import Header from "_components/Header/Header.jsx";
-import { CATEGORY_FROM_RUS_DESCRIPTIONS, PERSON_TYPES, TRANSACTION_STATUSES_FROM_RUS_TITLE } from "_services/transactions.service.js";
+import { PERSON_TYPES } from "_services/transactions.service.js";
 import { useStores } from "_stores/use-stores.js";
+import { observer } from "mobx-react-lite";
+import Button from "_components/Button/Button.jsx";
+import { AddCategory } from "_components/AddCategory/AddCategory.jsx";
 
-function EditTransactionModal({ onClose, transaction }) {
+function EditTransactionModalComponent({ onClose, transaction }) {
   const { transactionsStore } = useStores();
-  console.log(transaction);
-  const categories = CATEGORY_FROM_RUS_DESCRIPTIONS;
-  const statuses = TRANSACTION_STATUSES_FROM_RUS_TITLE;
+
+  const categories = transactionsStore.getCategories();
+  const statuses = transactionsStore.getStatuses();
   const personType = PERSON_TYPES;
 
   const [formData, setFormData] = useState({
-    personType: Object.keys(personType).find(key => personType[key] === transaction.userType),
-    date: transaction.date,
+    personType: Object.keys(personType).find(key => personType[key] === transaction.receiverUserType),
+    date: transaction.date.replaceAll(".", "-"),
     comment: transaction.description,
     amount: transaction.amount,
     status: Object.keys(statuses).find(key => statuses[key].name === transaction.status.name),
@@ -29,6 +32,7 @@ function EditTransactionModal({ onClose, transaction }) {
   });
 
   const [error, setError] = useState("");
+  const [displayAddPanel, setDisplayAddPanel] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,9 +54,12 @@ function EditTransactionModal({ onClose, transaction }) {
       return;
     }
 
+    const category = categories[formData.category];
+    delete category.id;
+
     const updatedData = {
       id: transaction.id,
-      userType: personType[formData.personType],
+      receiverUserType: Object.entries(personType).find(([, rus]) => rus === formData.personType)[0],
       date: formData.date.replaceAll("-", "."),
       description: formData.comment,
       amount: Number(formData.amount),
@@ -62,7 +69,7 @@ function EditTransactionModal({ onClose, transaction }) {
       receiverBank: formData.receiverBank,
       receiverAccount: formData.checkingAccount,
       receiverInn: formData.inn,
-      category: categories[formData.category],
+      category: category,
       receiverPhone: formData.phone,
     };
 
@@ -80,7 +87,7 @@ function EditTransactionModal({ onClose, transaction }) {
             <label>
               Тип лица:
               <select name="personType" value={formData.personType} onChange={handleChange}>
-                {Object.keys(personType).map(key => (
+                {Object.values(personType).map(key => (
                   <option key={key} value={key}>{key}</option>
                 ))}
               </select>
@@ -107,11 +114,17 @@ function EditTransactionModal({ onClose, transaction }) {
             </label>
             <label>
               Категория:
-              <select name="category" value={formData.category} onChange={handleChange}>
-                {Object.keys(categories).map(key => (
-                  <option key={key} value={key}>{key}</option>
-                ))}
-              </select>
+              <div className={styles.categoryWrapper}>
+                <div className={styles.selectRow}>
+                  <select name="category" value={formData.category} onChange={handleChange}>
+                    {Object.keys(categories).map(key => (
+                      <option key={key} value={key}>{key}</option>
+                    ))}
+                  </select>
+                  <Button onClick={() => setDisplayAddPanel(!displayAddPanel)} title="+" />
+                </div>
+                {displayAddPanel && <AddCategory onClose={() => setDisplayAddPanel(false)} /> }
+              </div>
             </label>
             <label>
               Банк отправителя:
@@ -149,9 +162,9 @@ function EditTransactionModal({ onClose, transaction }) {
   );
 }
 
-EditTransactionModal.propTypes = {
+EditTransactionModalComponent.propTypes = {
   onClose: PropTypes.func.isRequired,
   transaction: PropTypes.object.isRequired,
 };
 
-export default EditTransactionModal;
+export const EditTransactionModal = observer(EditTransactionModalComponent);

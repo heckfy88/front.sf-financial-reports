@@ -5,14 +5,13 @@ import styles from "./styles.module.scss";
 import Header from "_components/Header/Header.jsx";
 import PropTypes from "prop-types";
 import Button from "_components/Button/Button.jsx";
-import { CATEGORY_FROM_RUS_DESCRIPTIONS, TRANSACTION_STATUSES_FROM_RUS_TITLE } from "_services/transactions.service.js";
 
 function TransactionsFilterModalComponent({ onClose }) {
   const { transactionsStore } = useStores();
   const [localFilter, setLocalFilter] = useState({ ...transactionsStore.filter });
 
-  const categories = CATEGORY_FROM_RUS_DESCRIPTIONS;
-  const statuses = TRANSACTION_STATUSES_FROM_RUS_TITLE;
+  const categories = transactionsStore.getCategories();
+  const statuses = transactionsStore.getStatuses();
 
   const handleChange = (field, value) => {
     setLocalFilter(prev => ({ ...prev, [field]: value }));
@@ -131,7 +130,7 @@ function TransactionsFilterModalComponent({ onClose }) {
               onChange={e => handleChange("category", e.target.value)}
             >
               <option value="">Не выбрано</option>
-              {Object.entries(categories).map(([key, value]) => (
+              {Object.entries(categories).length > 0 && Object.entries(categories).map(([key, value]) => (
                 <option key={key} value={value.name}>{key}</option>
               ))}
             </select>

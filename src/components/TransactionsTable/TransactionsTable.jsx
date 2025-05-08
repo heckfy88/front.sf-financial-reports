@@ -2,9 +2,11 @@ import React, { useCallback, useMemo, useState } from "react";
 import { observer } from "mobx-react-lite";
 import { useStores } from "_stores/use-stores.js";
 import styles from "./styles.module.scss";
-import { TRANSACTION_STATUS_TYPES } from "_services/transactions.service.js";
+import { PERSON_TYPES, TRANSACTION_STATUS_TYPES } from "_services/transactions.service.js";
 import Button from "_components/Button/Button.jsx";
-import EditTransactionModal from "_components/EditTransactionModal/EditTransactionModal.jsx";
+import { EditTransactionModal } from "_components/EditTransactionModal/EditTransactionModal.jsx";
+
+const personType = PERSON_TYPES;
 
 function TransactionsTableComponent() {
   const { transactionsStore } = useStores();
@@ -16,6 +18,16 @@ function TransactionsTableComponent() {
     setUpdatedTransactions(transaction);
     setIsOpen(true);
   }, []);
+
+  const onDeleteHandler = useCallback(async (transactionId) => {
+    if (window.confirm("Вы уверены, что хотите удалить транзакцию?")) {
+      try {
+        await transactionsStore.deleteTransaction(transactionId);
+      } catch {
+        alert("Ошибка при удалении транзакции");
+      }
+    }
+  }, [transactionsStore]);
 
   const transactionsList = useMemo(() => {
     const transactions = filteredTransactions;
@@ -39,7 +51,7 @@ function TransactionsTableComponent() {
     return transactions.map((transaction, index) => (
         <tr key={transaction.id + index}>
           <td>{transaction.date}</td>
-          <td>{transaction.userType}</td>
+          <td>{personType[transaction.receiverUserType]}</td>
           <td>{transaction.description}</td>
           <td>{transaction.amount.toLocaleString()}</td>
           <td>{transaction.status.title}</td>
@@ -50,10 +62,17 @@ function TransactionsTableComponent() {
           <td>{transaction.receiverInn}</td>
           <td>{transaction.category.description}</td>
           <td>{transaction.receiverPhone}</td>
-          <td>{transaction.status.name === TRANSACTION_STATUS_TYPES.NEW ? <Button onClick={() => onClickHandler(transaction)} title="Редактировать" /> : ""}</td>
+          <td>{
+            transaction.status.name === TRANSACTION_STATUS_TYPES.NEW ? (
+                <div className={styles.buttonWrapper}>
+                  <Button onClick={() => onClickHandler(transaction)} title="Редактировать" />
+                  <Button onClick={() => onDeleteHandler(transaction.id)} title="Удалить" />
+                </div>
+              ) : ""
+          }</td>
         </tr>
       ));
-  }, [filteredTransactions, loading, onClickHandler])
+  }, [filteredTransactions, loading, onClickHandler, onDeleteHandler])
 
   return (
     <div className={styles.tableContainer}>

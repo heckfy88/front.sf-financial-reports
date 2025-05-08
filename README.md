@@ -1,12 +1,29 @@
-# React + Vite
+## Структура проекта:
+app/
+├── src/                 # Основная папка
+│   ├── assets/          # Ассеты (в данном случае шрифты)
+│   ├── components/      # Компоненты приложения
+│   ├── pages/           # Компоненты страниц
+│   ├── routes/          # Роуты приложения
+│   ├── services/        # Сервисные компоненты
+│   └── stores/          # Сторы для управления состояниями приложения
+├── public/              # Содержит фавикон мешочка с деньгами
+├── .gitignore           # Git ignore файл
+├── package.json         # Зависимости проекта
+├── vite.config.ts       # Конфиг Vite
+├── Dockerfile           # Docker-конфигурация
+├── docker-compose.yml   # Docker Compose конфиг
+├── nginx.conf.template  # Шаблон Nginx конфига
+├── entrypoint.sh        # Скрипт инициализации
+└── .dockerignore        # Docker ignore файл
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+## Установка и запуск.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+1. Запускаем билд: docker-compose build
+2. Запускаем контейнер: docker-compose up
+3. Приложение будет доступно по адресу: http://localhost:3000
 
-## Expanding the ESLint configuration
+## Важно!!!
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Сервер должен быть доступен на 8080 порту

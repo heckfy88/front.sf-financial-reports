@@ -1,4 +1,4 @@
-import { format, parseISO, startOfWeek, startOfMonth, startOfQuarter, startOfYear } from "date-fns";
+import { format, parse, startOfWeek, startOfMonth, startOfQuarter, startOfYear } from "date-fns";
 
 export function groupByTimeRange(transactions, range = "month") {
   const groupFunc = {
@@ -11,7 +11,7 @@ export function groupByTimeRange(transactions, range = "month") {
   const result = {};
 
   for (const tx of transactions) {
-    const date = parseISO(tx.date);
+    const date = parse(tx.date,"yyyy.MM.dd", new Date());
     const key = groupFunc[range](date);
 
     if (!result[key]) {

@@ -4,6 +4,7 @@ import { useApi } from '../services/use-api';
 import AuthStore from './auth.store';
 import TransactionsStore from "./transactions.store";
 import { StoresContext } from './stores-context';
+import { autorun } from "mobx";
 
 export const StoresProvider = ({ children }) => {
   const api = useApi();
@@ -15,7 +16,18 @@ export const StoresProvider = ({ children }) => {
       return null;
     }
 
-    return { authStore: new AuthStore(api), transactionsStore: new TransactionsStore(api) }
+    const authStore = new AuthStore(api);
+    const transactionsStore = new TransactionsStore(api);
+
+    autorun(() => {
+      if (authStore.isAuthenticated) {
+        transactionsStore.loadTransactions();
+        transactionsStore.loadStatuses();
+        transactionsStore.loadCategories();
+      }
+    });
+
+    return { authStore, transactionsStore }
   }, [api]);
 
   return (

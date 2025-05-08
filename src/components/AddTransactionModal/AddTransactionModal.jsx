@@ -2,11 +2,14 @@ import React, { useState } from "react";
 import PropTypes from "prop-types";
 import styles from "./styles.module.scss";
 import Header from "_components/Header/Header.jsx";
-import { CATEGORY_FROM_RUS_DESCRIPTIONS, PERSON_TYPES, TRANSACTION_STATUSES_FROM_RUS_TITLE } from "_services/transactions.service.js";
+import { PERSON_TYPES } from "_services/transactions.service.js";
 import { generateUUID } from "_services/operuid.service.js";
 import { useStores } from "_stores/use-stores.js";
+import { observer } from "mobx-react-lite";
+import Button from "_components/Button/Button.jsx";
+import { AddCategory } from "_components/AddCategory/AddCategory.jsx";
 
-function AddTransactionModal({ onClose }) {
+function AddTransactionModalComponent({ onClose }) {
   const [formData, setFormData] = useState({
     personType: 'Физическое лицо',
     date: '',
@@ -22,11 +25,12 @@ function AddTransactionModal({ onClose }) {
     phone: '',
   });
   const [error, setError] = useState("");
+  const [displayAddPanel, setDisplayAddPanel] = useState(false);
 
   const { transactionsStore } = useStores();
 
-  const categories = CATEGORY_FROM_RUS_DESCRIPTIONS;
-  const statuses = TRANSACTION_STATUSES_FROM_RUS_TITLE;
+  const categories = transactionsStore.getCategories();
+  const statuses = transactionsStore.getStatuses();
   const personType = PERSON_TYPES;
 
   const handleChange = (e) => {
@@ -55,7 +59,7 @@ function AddTransactionModal({ onClose }) {
 
     const data = {
       "id": generateUUID(),
-      "userType": personType[formData.personType],
+      "receiverUserType": Object.entries(personType).find(([, rus]) => rus === formData.personType)[0],
       "date": formData.date.replaceAll("-", "."),
       "description": formData.comment,
       "amount": formData.amount,
@@ -68,8 +72,6 @@ function AddTransactionModal({ onClose }) {
       "category": categories[formData.category],
       "receiverPhone": formData.phone,
     }
-
-    console.log(data);
 
     transactionsStore.addTransactions(JSON.stringify(data)).then(() => {
       onClose();
@@ -87,8 +89,8 @@ function AddTransactionModal({ onClose }) {
             <label>
               Тип лица:
               <select name="personType" value={formData.personType} onChange={handleChange}>
-                {Object.keys(personType).map(key => (
-                  <option key={key} value={key}>{key}</option>
+                {Object.values(personType).map(value => (
+                  <option key={value} value={value}>{value}</option>
                 ))}
               </select>
             </label>
@@ -117,11 +119,17 @@ function AddTransactionModal({ onClose }) {
             </label>
             <label>
               Категория:
-              <select name="category" value={formData.category} onChange={handleChange}>
-                {Object.keys(categories).map(key => (
-                  <option key={key} value={key}>{key}</option>
-                ))}
-              </select>
+              <div className={styles.categoryWrapper}>
+                <div className={styles.selectRow}>
+                  <select name="category" value={formData.category} onChange={handleChange}>
+                    {Object.keys(categories).map(key => (
+                      <option key={key} value={key}>{key}</option>
+                    ))}
+                  </select>
+                  <Button onClick={() => setDisplayAddPanel(!displayAddPanel)} title="+" />
+                </div>
+                {displayAddPanel && <AddCategory onClose={() => setDisplayAddPanel(false)} /> }
+              </div>
             </label>
             <label>
               Банк отправителя:
@@ -159,8 +167,8 @@ function AddTransactionModal({ onClose }) {
   );
 }
 
-export default AddTransactionModal;
-
-AddTransactionModal.propTypes = {
+AddTransactionModalComponent.propTypes = {
   onClose: PropTypes.func.isRequired,
 };
+
+export const AddTransactionModal = observer(AddTransactionModalComponent);
