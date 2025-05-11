@@ -35,7 +35,7 @@ const groupByType = (transactions, period = "month") => {
 
 function Dashboard2({ transactions }) {
   const grouped = groupByType(transactions);
-  const labels = Object.keys(grouped);
+  const labels = Object.keys(grouped).sort();
   const incomeData = labels.map(label => grouped[label].INCOME || 0);
   const expenseData = labels.map(label => grouped[label].EXPENSE || 0);
 

@@ -23,12 +23,16 @@ function Dashboard1({ transactions }) {
     return groupByTimeRange(transactions, range);
   }, [transactions, range]);
 
+  const sortedEntries = useMemo(() => Object.entries(groupedData).sort(([a], [b]) =>
+    a.localeCompare(b)
+  ), [groupedData]);
+
   const chartData = {
     labels: Object.keys(groupedData),
     datasets: [
       {
         label: "Количество транзакций",
-        data: Object.values(groupedData),
+        data: sortedEntries.map(([, value]) => value),
         backgroundColor: "#007bff",
       },
     ],
